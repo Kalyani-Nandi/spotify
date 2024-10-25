@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 function MusicList() {
-  const [musicList, setMusicList] = useState([]); // Original list from API
-  const [filteredMusicList, setFilteredMusicList] = useState([]); // Filtered list for display
+  const [musicList, setMusicList] = useState([]);
+  const [filteredMusicList, setFilteredMusicList] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
@@ -17,8 +17,8 @@ function MusicList() {
       }
       const data = await response.json();
       console.log(data.data);
-      setMusicList(data.data || []); // Save original list
-      setFilteredMusicList(data.data || []); // Initialize filtered list
+      setMusicList(data.data || []);
+      setFilteredMusicList(data.data || []);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -57,7 +57,7 @@ function MusicList() {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <h1>Music List</h1>
       <div className="flex gap-6 my-4">
         <button onClick={() => handleFilter("for_you")}>For You</button>
@@ -74,23 +74,21 @@ function MusicList() {
       </div>
       {filteredMusicList.length > 0 ? (
         filteredMusicList.map((music) => (
-          <div key={music?.id} className="border-b p-4">
+          <div key={music?.id} className="border-b p-4 cursor-pointer hover:bg-slate-300">
             <article className="flex items-start space-x-4">
               <img
                 src={`https://cms.samespace.com/assets/${music?.cover}`}
-                alt={music?.name}
-                width="60"
-                height="60"
-                className="rounded-full object-cover"
+                alt={music?.name}              
+                className="rounded-full object-cover w-14 h-14"
               />
-              <div className="flex-auto">
+              <div className="flex-auto mt-1">
                 <h2 className="font-semibold text-slate-900 truncate">
                   {music?.name}
                 </h2>
                 <p>{music?.artist}</p>
               </div>
               <div className="text-sm text-gray-500">
-                Released: {formatTime(music?.date_created)}
+                {formatTime(music?.date_created)}
               </div>
             </article>
           </div>
