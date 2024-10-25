@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-function MusicList() {
+function MusicList({ handleSongClick }) {
   const [musicList, setMusicList] = useState([]);
   const [filteredMusicList, setFilteredMusicList] = useState([]);
+  const [durations, setDurations] = useState({});
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
@@ -16,7 +17,6 @@ function MusicList() {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log(data.data);
       setMusicList(data.data || []);
       setFilteredMusicList(data.data || []);
     } catch (error) {
@@ -37,23 +37,24 @@ function MusicList() {
   const handleFilter = (filterType) => {
     if (filterType === "top_track") {
       setFilteredMusicList(musicList.filter((music) => music?.top_track));
-    }
-    //  else if (filterType === "for_you") {
-    // //   const specificUserId = "2085be13-8079-40a6-8a39-c3b9180f9a0a";
-    //   setFilteredMusicList(musicList.filter((music) => music?.user_created === specificUserId));
-    // }
-    else {
+    } else {
       setFilteredMusicList(musicList);
     }
   };
 
-  const formatTime = (dateString) => {
-    const options = {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-    return new Date(dateString).toLocaleTimeString(undefined, options);
+  const handleLoadedMetadata = (id, duration) => {
+    setDurations((prevDurations) => ({
+      ...prevDurations,
+      [id]: duration,
+    }));
+  };
+
+  const formatDuration = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${minutes}:${remainingSeconds}`;
   };
 
   return (
@@ -74,11 +75,17 @@ function MusicList() {
       </div>
       {filteredMusicList.length > 0 ? (
         filteredMusicList.map((music) => (
-          <div key={music?.id} className="border-b p-4 cursor-pointer hover:bg-slate-300">
-            <article className="flex items-start space-x-4">
+          <div
+            key={music?.id}
+            className="border-b p-4 cursor-pointer hover:bg-slate-300"
+          >
+            <article
+              className="flex items-start space-x-4"
+              onClick={() => handleSongClick(music)}
+            >
               <img
                 src={`https://cms.samespace.com/assets/${music?.cover}`}
-                alt={music?.name}              
+                alt={music?.name}
                 className="rounded-full object-cover w-14 h-14"
               />
               <div className="flex-auto mt-1">
@@ -88,8 +95,17 @@ function MusicList() {
                 <p>{music?.artist}</p>
               </div>
               <div className="text-sm text-gray-500">
-                {formatTime(music?.date_created)}
+                {durations[music?.id]
+                  ? formatDuration(durations[music?.id])
+                  : "Loading..."}
               </div>
+              <audio
+                src={music?.url}
+                onLoadedMetadata={(e) =>
+                  handleLoadedMetadata(music?.id, e.target.duration)
+                }
+                className="hidden"
+              />
             </article>
           </div>
         ))
