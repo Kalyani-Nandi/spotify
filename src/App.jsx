@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div
-      className="px-10 w-full flex gap-10"
+      className="px-10 w-full h-screen flex gap-10"
       style={{ backgroundColor: song?.accent }}
     >
       <div className="flex w-[50%]">

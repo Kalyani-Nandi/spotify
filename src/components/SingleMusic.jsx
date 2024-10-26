@@ -20,14 +20,14 @@ function SingleMusic({ song }) {
     <div className="w-full">
       {Object.keys(song).length !== 0 ? (
         <>
-          <div className=" text-white max-w-sm mx-auto rounded-lg  p-4">
+          <div className="text-white max-w-lg mx-auto rounded-lg  p-4">
             <div className="text-start">
               <h2 className="text-lg font-bold mb-1">{song?.name}</h2>
               <p className="text-sm text-gray-400 mb-3">{song?.artist}</p>
             </div>
-            <div className="album-art">
+            <div className="">
               <img
-                className="w-full h-64 object-cover rounded-lg mb-4"
+                className="w-full h-[30rem] object-cover rounded-lg mb-4"
                 src={`https://cms.samespace.com/assets/${song?.cover}`}
                 alt={song?.name}
               />
