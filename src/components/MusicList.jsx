@@ -5,6 +5,7 @@ function MusicList({ handleSongClick }) {
   const [filteredMusicList, setFilteredMusicList] = useState([]);
   const [durations, setDurations] = useState({});
   const [searchText, setSearchText] = useState("");
+  const [activeTab, setActiveTab] = useState("for_you");
 
   useEffect(() => {
     fetchMusicData();
@@ -26,15 +27,21 @@ function MusicList({ handleSongClick }) {
 
   const handleSearch = (value) => {
     setSearchText(value);
-    const searchedMusicList = musicList.filter(
-      (music) =>
+    const filteredList = musicList.filter((music) => {
+      const isMatching =
         music?.name?.toLowerCase().includes(value.toLowerCase()) ||
-        music?.artist?.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredMusicList(searchedMusicList);
+        music?.artist?.toLowerCase().includes(value.toLowerCase());
+      if (activeTab === "top_track") {
+        return isMatching && music?.top_track;
+      }
+      return isMatching;
+    });
+    setFilteredMusicList(filteredList);
   };
 
   const handleFilter = (filterType) => {
+    setActiveTab(filterType);
+    setSearchText("");
     if (filterType === "top_track") {
       setFilteredMusicList(musicList.filter((music) => music?.top_track));
     } else {
@@ -59,10 +66,19 @@ function MusicList({ handleSongClick }) {
 
   return (
     <div className="w-full">
-      <h1>Music List</h1>
       <div className="flex gap-6 my-4">
-        <button onClick={() => handleFilter("for_you")}>For You</button>
-        <button onClick={() => handleFilter("top_track")}>Top Tracks</button>
+        <button
+          onClick={() => handleFilter("for_you")}
+          className={`text-xl ${activeTab === "for_you" ? "font-extrabold" : ""}`}
+        >
+          For You
+        </button>
+        <button
+          onClick={() => handleFilter("top_track")}
+          className={`text-xl ${activeTab === "top_track" ? "font-extrabold" : ""}`}
+        >
+          Top Tracks
+        </button>
       </div>
       <div className="my-4">
         <input
@@ -70,14 +86,14 @@ function MusicList({ handleSongClick }) {
           placeholder="Search Song or Artist"
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
-          className="border p-2 rounded w-full"
+          className="border-none p-2 rounded-md w-full bg-neutral-800 bg-opacity-40 outline-none"
         />
       </div>
-      {filteredMusicList.length > 0 ? (
+      {filteredMusicList?.length > 0 ? (
         filteredMusicList.map((music) => (
           <div
             key={music?.id}
-            className="border-b p-4 cursor-pointer hover:bg-slate-300"
+            className="p-2 cursor-pointer hover:bg-slate-600 rounded-md hover:bg-opacity-25"
           >
             <article
               className="flex items-start space-x-4"
@@ -89,10 +105,8 @@ function MusicList({ handleSongClick }) {
                 className="rounded-full object-cover w-14 h-14"
               />
               <div className="flex-auto mt-1">
-                <h2 className="font-semibold text-slate-900 truncate">
-                  {music?.name}
-                </h2>
-                <p>{music?.artist}</p>
+                <h2 className="font-semibold truncate">{music?.name}</h2>
+                <p className="text-sm text-gray-500">{music?.artist}</p>
               </div>
               <div className="text-sm text-gray-500">
                 {durations[music?.id]
