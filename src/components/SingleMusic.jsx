@@ -1,29 +1,72 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { BsThreeDots } from "react-icons/bs";
+import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
+import { MdVolumeUp, MdVolumeOff } from "react-icons/md";
 
-function SingleMusic({ song }) {
+function SingleMusic({ song, songs, songIndex, handleSongClick }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
 
   const playPauseHandler = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
+    if (!song) return;
     setIsPlaying(!isPlaying);
+    if (!isPlaying) {
+      audioRef.current.play().catch(() => setIsPlaying(false));
+    } else {
+      audioRef.current.pause();
+    }
   };
 
   const onTimeUpdate = () => {
     setCurrentTime(audioRef.current.currentTime);
   };
 
+  const handleNext = () => {
+    if (!song) return;
+    const nextIndex = (songIndex + 1) % songs.length;
+    handleSongClick(songs[nextIndex], nextIndex);
+    setIsPlaying(true);
+  };
+
+  const handlePrev = () => {
+    if (!song) return;
+    const prevIndex = (songIndex - 1 + songs.length) % songs.length;
+    handleSongClick(songs[prevIndex], prevIndex);
+    setIsPlaying(true);
+  };
+  const handleMuteToggle = () => {
+    setIsMuted((prev) => !prev);
+    audioRef.current.muted = !isMuted;
+  };
+
+  const handleSliderChange = (e) => {
+    const newTime = e.target.value;
+    audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    audioEl.addEventListener("ended", handleNext);
+    if (song) {
+      audioRef.current.src = song.url;
+      audioRef.current.load();
+      // audioRef.current.play();
+      // setIsPlaying(true);
+      audioRef.current.onloadedmetadata = () => {
+        setDuration(audioRef.current.duration);
+      };
+    }
+    return () => audioEl.removeEventListener("ended", handleNext);
+  }, [song]);
   // Default values if song is empty
   const defaultTitle = "Songs of Hollywood";
   const defaultArtist = "Various Artists";
   const defaultCover =
     "https://t3.ftcdn.net/jpg/08/08/52/40/360_F_808524078_44FKOyoEzPLewYmiRxKwgTp64GH8pGGH.webp"; // Replace with your default image path
-  const defaultUrl = ""; // Leave empty or provide a default URL if you have one
 
   return (
     <div className="w-full">
@@ -48,38 +91,31 @@ function SingleMusic({ song }) {
           />
         </div>
 
-        <div className="w-full h-1 bg-gray-700 rounded-lg mt-4">
-          <div
-            className="h-1 bg-white rounded-xl"
-            style={{
-              width: `${
-                (currentTime / (audioRef.current?.duration || 1)) * 100
-              }%`,
-            }}
-          ></div>
+        <div className="w-full flex items-center mt-4">
+          <input
+            type="range"
+            min="0"
+            max={duration}
+            value={currentTime}
+            onChange={handleSliderChange}
+            className="custom-slider mx-2 flex-grow"
+          />
         </div>
 
         <div
           className={`${
-            song.cover ? "" : "pointer-events-none"
+            song?.cover ? "" : "pointer-events-none"
           } flex items-center justify-between mt-4`}
         >
+          <button className="bg-zinc-600 bg-opacity-35 p-2 rounded-full">
+            <BsThreeDots size={24} color="white" />
+          </button>
           {/* Previous button */}
-          <button className="bg-transparent text-white w-10 h-10 flex items-center justify-center rounded-full focus:outline-none">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 12H5m7-7l-7 7 7 7"
-              />
-            </svg>
+          <button
+            onClick={handlePrev}
+            className="p-3 rounded-full focus:outline-none"
+          >
+            <FaBackward size={24} />
           </button>
 
           {/* Play / Pause button */}
@@ -87,63 +123,34 @@ function SingleMusic({ song }) {
             onClick={playPauseHandler}
             className="bg-white text-black w-12 h-12 flex items-center justify-center rounded-full focus:outline-none"
           >
-            {isPlaying ? (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 9v6m4-6v6"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-5.197-3.073A1 1 0 008 9.08v5.838a1 1 0 001.555.832l5.197-3.073a1 1 0 000-1.664z"
-                />
-              </svg>
-            )}
+            {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
           </button>
 
           {/* Next button */}
-          <button className="bg-transparent text-white w-10 h-10 flex items-center justify-center rounded-full focus:outline-none">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 12h14m-7 7l7-7-7-7"
-              />
-            </svg>
+          <button onClick={handleNext} className="p-3 rounded-full">
+            <FaForward size={24} />
+          </button>
+          <button
+            onClick={handleMuteToggle}
+            className="bg-zinc-600 bg-opacity-35 p-2 rounded-full"
+          >
+            {isMuted ? (
+              <MdVolumeOff size={24} color="white" />
+            ) : (
+              <MdVolumeUp size={24} color="white" />
+            )}
           </button>
         </div>
 
         <audio
           ref={audioRef}
-          src={song?.url || defaultUrl}
+          controls
+          className="hidden"
           onTimeUpdate={onTimeUpdate}
-        />
+        >
+          {song && <source src={song?.url} type="audio/mp3" />}
+          Your browser does not support the audio element.
+        </audio>
       </div>
     </div>
   );
