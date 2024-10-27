@@ -7,7 +7,6 @@ function MusicList({
   setFilteredMusicList,
 }) {
   const [musicList, setMusicList] = useState([]);
-  // const [filteredMusicList, setFilteredMusicList] = useState([]);
   const [durations, setDurations] = useState({});
   const [searchText, setSearchText] = useState("");
   const [activeTab, setActiveTab] = useState("for_you");

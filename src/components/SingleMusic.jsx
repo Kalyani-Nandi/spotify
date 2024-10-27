@@ -3,6 +3,10 @@ import { BsThreeDots } from "react-icons/bs";
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 import { MdVolumeUp, MdVolumeOff } from "react-icons/md";
 
+const defaultTitle = "Songs of Hollywood";
+const defaultArtist = "Various Artists";
+const defaultCover =
+  "https://t3.ftcdn.net/jpg/08/08/52/40/360_F_808524078_44FKOyoEzPLewYmiRxKwgTp64GH8pGGH.webp";
 function SingleMusic({ song, songs, songIndex, handleSongClick }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -54,19 +58,14 @@ function SingleMusic({ song, songs, songIndex, handleSongClick }) {
     if (song) {
       audioRef.current.src = song.url;
       audioRef.current.load();
-      // audioRef.current.play();
-      // setIsPlaying(true);
+      audioRef.current.play().catch(() => setIsPlaying(false));
+      setIsPlaying(true);
       audioRef.current.onloadedmetadata = () => {
         setDuration(audioRef.current.duration);
       };
     }
     return () => audioEl.removeEventListener("ended", handleNext);
   }, [song]);
-  // Default values if song is empty
-  const defaultTitle = "Songs of Hollywood";
-  const defaultArtist = "Various Artists";
-  const defaultCover =
-    "https://t3.ftcdn.net/jpg/08/08/52/40/360_F_808524078_44FKOyoEzPLewYmiRxKwgTp64GH8pGGH.webp"; // Replace with your default image path
 
   return (
     <div className="w-full">
@@ -110,23 +109,18 @@ function SingleMusic({ song, songs, songIndex, handleSongClick }) {
           <button className="bg-zinc-600 bg-opacity-35 p-2 rounded-full">
             <BsThreeDots size={24} color="white" />
           </button>
-          {/* Previous button */}
           <button
             onClick={handlePrev}
             className="p-3 rounded-full focus:outline-none"
           >
             <FaBackward size={24} />
           </button>
-
-          {/* Play / Pause button */}
           <button
             onClick={playPauseHandler}
             className="bg-white text-black w-12 h-12 flex items-center justify-center rounded-full focus:outline-none"
           >
             {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
           </button>
-
-          {/* Next button */}
           <button onClick={handleNext} className="p-3 rounded-full">
             <FaForward size={24} />
           </button>

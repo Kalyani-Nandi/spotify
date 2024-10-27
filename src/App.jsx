@@ -6,7 +6,6 @@ import { useMediaQuery } from "react-responsive";
 
 function App() {
   const [song, setSong] = useState({});
-  // const [songs, setSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [currentSongId, setCurrentSongId] = useState(null);
   const [filteredMusicList, setFilteredMusicList] = useState([]);
@@ -16,7 +15,6 @@ function App() {
   const handleSongClick = (songData, index, songs) => {
     setCurrentSongId(songData?.id);
     setSong(songData);
-    // setSongs(songs);
 
     setCurrentIndex(index);
     // setIsMobilePlayer(true);
