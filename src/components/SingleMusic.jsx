@@ -72,19 +72,18 @@ function SingleMusic({ musicPlayerData }) {
   }, [song]);
 
   return (
-    <div className="w-full animate-bottom">
-      <div className="text-white max-w-lg mx-auto rounded-lg md:p-4">
-        <div className="text-start">
-          <h2 className="text-lg font-bold mb-1">
+    <div className="w-full animate-bottom md:mt-14">
+      <div className="text-white max-w-lg mx-auto rounded-lg">
+        <div className="text-start mb-4">
+          <h2 className="text-xl font-bold mb-1">
             {song?.name || defaultTitle}
           </h2>
           <p className="text-sm text-gray-400 mb-3">
             {song?.artist || defaultArtist}
           </p>
         </div>
-        <div className="">
           <img
-            className="w-full h-[30rem] object-cover rounded-lg mb-4"
+            className="w-full h-[30rem] object-cover rounded-lg mt-6 mb-4"
             src={
               song?.cover
                 ? `https://cms.samespace.com/assets/${song.cover}`
@@ -92,7 +91,6 @@ function SingleMusic({ musicPlayerData }) {
             }
             alt={song?.name || defaultTitle}
           />
-        </div>
 
         <div className="w-full flex items-center mt-6">
           <input
