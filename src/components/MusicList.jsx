@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { IoSearchOutline } from "react-icons/io5";
 
 function MusicList({
   handleSongClick,
@@ -88,20 +89,21 @@ function MusicList({
           Top Tracks
         </button>
       </div>
-      <div className="my-4">
+      <div className="px-2 w-full rounded-md my-4 flex justify-between items-center bg-neutral-800">
         <input
           type="text"
-          placeholder="Search Song or Artist"
+          placeholder="Search Song, Artist ..."
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
           className="border-none p-2 rounded-md w-full bg-neutral-800 bg-opacity-40 outline-none"
         />
+        <IoSearchOutline size={20} />
       </div>
       {filteredMusicList?.length > 0 ? (
         filteredMusicList.map((music, index) => (
           <div
             key={music?.id}
-            className={`flex items-center justify-between p-2 cursor-pointer rounded-md mt-3 ${
+            className={`flex items-center justify-between py-2 px-3 cursor-pointer rounded-md mt-3 ${
               music?.id === currentSongId
                 ? "bg-slate-600 bg-opacity-35"
                 : "hover:bg-slate-600 hover:bg-opacity-35"
@@ -134,7 +136,7 @@ function MusicList({
           </div>
         ))
       ) : (
-        <p>No results found.</p>
+        <p>No songs found.</p>
       )}
     </div>
   );
