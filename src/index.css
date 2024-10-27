@@ -19,10 +19,10 @@ body,
   }
 }
 
-.animate-slide-bottom {
+.animate-bottom {
   animation: slideInFromTop 0.5s ease forwards;
 }
-@keyframes slideInFromBottom {
+@keyframes slideFromBottom {
   from {
     opacity: 0;
     transform: translateY(100%);
@@ -33,6 +33,64 @@ body,
   }
 }
 
-.animate-slide-top {
+.animate-top {
   animation: slideInFromBottom 0.5s ease forwards;
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-left {
+  animation: slideFromLeft 0.5s ease forwards;
+}
+
+.custom-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: #494747;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  background: #494747;
+}
+
+.custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  margin-top: -5.5px;
+}
+
+.custom-slider::-moz-range-progress {
+  background: white;
+}
+
+.custom-slider::-webkit-slider-runnable-track {
+  background: linear-gradient(
+    to right,
+    white 0%,
+    white var(--range-fill),
+    #494747 var(--range-fill),
+    #494747 100%
+  );
+}
+
+.custom-slider::-moz-range-track {
+  background: #494747;
 }

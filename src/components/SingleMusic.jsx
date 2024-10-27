@@ -3,16 +3,20 @@ import { BsThreeDots } from "react-icons/bs";
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 import { MdVolumeUp, MdVolumeOff } from "react-icons/md";
 
-const defaultTitle = "Songs of Hollywood";
-const defaultArtist = "Various Artists";
-const defaultCover =
-  "https://t3.ftcdn.net/jpg/08/08/52/40/360_F_808524078_44FKOyoEzPLewYmiRxKwgTp64GH8pGGH.webp";
-function SingleMusic({ song, songs, songIndex, handleSongClick }) {
+function SingleMusic({ musicPlayerData }) {
+  const { song, songs, songIndex, handleSongClick } = musicPlayerData;
+
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState(0);
+
+  // Default player card data.
+  const defaultTitle = "Songs of Hollywood";
+  const defaultArtist = "Various Artists";
+  const defaultCover =
+    "https://t3.ftcdn.net/jpg/08/08/52/40/360_F_808524078_44FKOyoEzPLewYmiRxKwgTp64GH8pGGH.webp";
 
   const playPauseHandler = () => {
     if (!song) return;
@@ -68,7 +72,7 @@ function SingleMusic({ song, songs, songIndex, handleSongClick }) {
   }, [song]);
 
   return (
-    <div className="w-full">
+    <div className="w-full animate-bottom">
       <div className="text-white max-w-lg mx-auto rounded-lg md:p-4">
         <div className="text-start">
           <h2 className="text-lg font-bold mb-1">
@@ -97,7 +101,8 @@ function SingleMusic({ song, songs, songIndex, handleSongClick }) {
             max={duration}
             value={currentTime}
             onChange={handleSliderChange}
-            className="custom-slider mx-2 flex-grow"
+            className="custom-slider flex-grow cursor-pointer"
+            style={{ "--range-fill": `${(currentTime / duration) * 100}%` }}
           />
         </div>
 
