@@ -2,7 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-body, *  {
-    box-sizing: border-box;
-    font-family: sans-serif;
+body,
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-bottom {
+  animation: slideInFromTop 0.5s ease forwards;
+}
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-top {
+  animation: slideInFromBottom 0.5s ease forwards;
 }

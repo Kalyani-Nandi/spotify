@@ -69,7 +69,7 @@ function SingleMusic({ song, songs, songIndex, handleSongClick }) {
 
   return (
     <div className="w-full">
-      <div className="text-white max-w-lg mx-auto rounded-lg p-4">
+      <div className="text-white max-w-lg mx-auto rounded-lg md:p-4">
         <div className="text-start">
           <h2 className="text-lg font-bold mb-1">
             {song?.name || defaultTitle}

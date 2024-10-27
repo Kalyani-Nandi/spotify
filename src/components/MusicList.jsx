@@ -5,7 +5,7 @@ function MusicList({
   handleSongClick,
   currentSongId,
   filteredMusicList,
-  setFilteredMusicList,
+  setFilteredMusicList,song
 }) {
   const [musicList, setMusicList] = useState([]);
   const [durations, setDurations] = useState({});
@@ -89,13 +89,17 @@ function MusicList({
           Top Tracks
         </button>
       </div>
-      <div className="px-2 w-full rounded-md my-4 flex justify-between items-center bg-neutral-800">
+      <div className="px-2 w-full rounded-md my-4 flex justify-between items-center bg-slate-800"
+      style={{
+        background: `linear-gradient(135deg, ${song?.accent}, ${song?.accent})`,
+      }}
+      >
         <input
           type="text"
           placeholder="Search Song, Artist ..."
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
-          className="border-none p-2 rounded-md w-full bg-neutral-800 bg-opacity-40 outline-none"
+          className="border-none p-2 rounded-md w-full bg-inherit outline-none"
         />
         <IoSearchOutline size={20} />
       </div>
