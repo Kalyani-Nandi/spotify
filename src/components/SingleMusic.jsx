@@ -94,7 +94,7 @@ function SingleMusic({ musicPlayerData }) {
           />
         </div>
 
-        <div className="w-full flex items-center mt-4">
+        <div className="w-full flex items-center mt-6">
           <input
             type="range"
             min="0"
@@ -109,7 +109,7 @@ function SingleMusic({ musicPlayerData }) {
         <div
           className={`${
             song?.cover ? "" : "pointer-events-none"
-          } flex items-center justify-between mt-4`}
+          } flex items-center justify-between mt-8`}
         >
           <button className="bg-zinc-600 bg-opacity-35 p-2 rounded-full">
             <BsThreeDots size={24} color="white" />
@@ -118,16 +118,16 @@ function SingleMusic({ musicPlayerData }) {
             onClick={handlePrev}
             className="p-3 rounded-full focus:outline-none"
           >
-            <FaBackward size={24} />
+            <FaBackward size={20} />
           </button>
           <button
             onClick={playPauseHandler}
             className="bg-white text-black w-12 h-12 flex items-center justify-center rounded-full focus:outline-none"
           >
-            {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
+            {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
           </button>
           <button onClick={handleNext} className="p-3 rounded-full">
-            <FaForward size={24} />
+            <FaForward size={20} />
           </button>
           <button
             onClick={handleMuteToggle}
